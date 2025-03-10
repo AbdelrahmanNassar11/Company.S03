@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Company.S03.DAL.Data.Confagrations
 {
-    class DeparymentConfagration : IEntityTypeConfiguration<Department>
+    public class DeparymentConfagration : IEntityTypeConfiguration<Department>
     {
         public void Configure(EntityTypeBuilder<Department> builder)
         {
