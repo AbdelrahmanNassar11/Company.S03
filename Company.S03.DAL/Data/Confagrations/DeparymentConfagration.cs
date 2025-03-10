@@ -14,7 +14,6 @@ namespace Company.S03.DAL.Data.Confagrations
         public void Configure(EntityTypeBuilder<Department> builder)
         {
             builder.Property(D => D.Id).UseIdentityColumn(10, 10);
-            throw new NotImplementedException();
         }
     }
 }

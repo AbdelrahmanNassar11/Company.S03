@@ -1,16 +1,25 @@
+using Company.S03.BLL.Interface;
+using Company.S03.BLL.Repositories;
+using Company.S03.DAL.Data.Contexts;
+using Microsoft.EntityFrameworkCore;
+
 namespace Company.S03.PL
 {
     public class Program
     {
         public static void Main(string[] args)
         {
+    
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-
+            builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+            builder.Services.AddDbContext<CompanyDbContext>(options => 
+            { 
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+            });
             var app = builder.Build();
-
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
