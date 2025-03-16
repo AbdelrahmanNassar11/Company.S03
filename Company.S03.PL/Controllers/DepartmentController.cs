@@ -53,7 +53,7 @@ namespace Company.S03.PL.Controllers
         }
 
         [HttpGet]
-        public IActionResult Details(int? id)
+        public IActionResult Details(int? id , string viewName = "Details")
         {
             if (id is null) return BadRequest("Invalid Id");
 
@@ -61,18 +61,18 @@ namespace Company.S03.PL.Controllers
 
             if (department is null) return NotFound(new { StatusCode = 404, Message = $"Department with Id {id} is Not Found" });
              
-            return View(department);
+            return View(viewName,department);
         }
         [HttpGet]
         public IActionResult Edit(int? id)
         {
-            if (id is null) return BadRequest("Invalid Id");
+            //if (id is null) return BadRequest("Invalid Id");
 
-            var department = _departmentRepository.Get(id.Value);
+            //var department = _departmentRepository.Get(id.Value);
 
-            if (department is null) return NotFound(new { StatusCode = 404, Message = $"Department with Id {id} is Not Found" });
+            //if (department is null) return NotFound(new { StatusCode = 404, Message = $"Department with Id {id} is Not Found" });
 
-            return View(department);
+            return Details(id,"Edit");
         }
 
         [HttpPost]
@@ -94,6 +94,34 @@ namespace Company.S03.PL.Controllers
             return View(department);
         }
 
+        [HttpGet]
+        public IActionResult Delete(int? id)
+        {
+            //if (id is null) return BadRequest("Invalid Id");
 
+            //var department = _departmentRepository.Get(id.Value);
+
+            //if (department is null) return NotFound(new { StatusCode = 404, Message = $"Department with Id {id} is Not Found" });
+
+            return Details(id,"Delete");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete([FromRoute] int id, Department department)
+        {
+            if (ModelState.IsValid)
+            {
+                if (id == department.Id)
+                {
+                    var count = _departmentRepository.Delete(department);
+                    if (count > 0)
+                    {
+                        return RedirectToAction(nameof(Index));//دا عشان يعمل تعديل ويغيره ف ال view و ال db
+                    }
+                }
+            }
+            return View(department);
+        }
     }
 }
