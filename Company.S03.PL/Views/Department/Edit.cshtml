@@ -1,34 +1,33 @@
-﻿@model CreateDepartmentDto
+﻿@model Department
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Edit";
 }
 
-<h1>Create Department</h1>
+<h1>Edit Department</h1>
 <br />
 <br />
-<br />
-<form asp-action="Create">
-    
+<form asp-action="Edit">
+
     <div class="m-3">
         <label asp-for="Code" class="col-form-label"></label>
-        <input type="text" asp-for="Code" class="form-control" />  
-        <span asp-validation-for = "Code" class="text-danger"></span>
+        <input type="text" asp-for="Code" class="form-control" />
+        <span asp-validation-for="Code" class="text-danger"></span>
     </div>
 
     <div class="m-3">
         <label asp-for="Name" class="col-form-label"></label>
         <input type="text" asp-for="Name" class="form-control" />
-        <span asp-validation-for = "Name" class="text-danger"></span>
+        <span asp-validation-for="Name" class="text-danger"></span>
     </div>
 
     <div class="m-3">
         <label asp-for="CreateAt" class="col-form-label">Data Of Creation</label>
         <input type="datetime-local" asp-for="CreateAt" class="form-control" />
-        <span asp-validation-for = "CreateAt" class="text-danger"></span>
+        <span asp-validation-for="CreateAt" class="text-danger"></span>
     </div>
 
     <div class="m-3">
-        <button type="submit" class="btn btn-primary">Create</button>
+        <button type="submit" class="btn btn-warning">Save</button>
         <a asp-action="Index" class="btn btn-light">Back To List</a>
     </div>
 </form>
