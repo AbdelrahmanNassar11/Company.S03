@@ -73,26 +73,55 @@ namespace Company.S03.PL.Controllers
         [HttpGet]
         public IActionResult Edit(int? id)
         {
-            return Details(id, "Edit");
+            if (id is null) return BadRequest("Invalid Id");
+
+            var employee = _employeeRepository.Get(id.Value);
+
+            if (employee is null) return NotFound(new { StatusCode = 404, Message = $"Employee with Id {id} is Not Found" });
+            var employeeDto = new CreateEmployeeDto
+            {
+                Name = employee.Name,
+                Age = employee.Age,
+                Email = employee.Email,
+                Phone = employee.Phone,
+                Address = employee.Address,
+                Salary = employee.Salary,
+                IsActive = employee.IsActive,
+                IsDeleted = employee.IsDeleted,
+                HiringDate = employee.HiringDate,
+                CreateAt = employee.CreateAt
+            };
+            return View(employeeDto);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute] int id, Employee employee)
+        public IActionResult Edit([FromRoute] int id, CreateEmployeeDto model)
         {
             if (ModelState.IsValid)
             {
-                if (id == employee.Id)
+                var employee = new Employee
                 {
-                    var count = _employeeRepository.Update(employee);
-                    if (count > 0)
-                    {
-                        return RedirectToAction(nameof(Index));//دا عشان يعمل تعديل ويغيره ف ال view و ال db
-                    }
+                    Id = id,
+                    Name = model.Name,
+                    Age = model.Age,
+                    Email = model.Email,
+                    Phone = model.Phone,
+                    Address = model.Address,
+                    Salary = model.Salary,
+                    IsActive = model.IsActive,
+                    IsDeleted = model.IsDeleted,
+                    HiringDate = model.HiringDate,
+                    CreateAt = model.CreateAt
+                };
+                var count = _employeeRepository.Update(employee);
+                if (count > 0)
+                {
+                    return RedirectToAction(nameof(Index));//دا عشان يعمل تعديل ويغيره ف اviewوال db
                 }
             }
 
-            return View(employee);
+            return View(model);
         }
 
         [HttpGet]
