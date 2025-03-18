@@ -1,0 +1,50 @@
+﻿@model Employee
+<div class="m-3">
+    <label asp-for="Name" class="col-form-label"></label>
+    <input type="text" asp-for="Name" class="form-control" readonly />
+</div>
+
+<div class="m-3">
+    <label asp-for="Age" class="col-form-label"></label>
+    <input type="text" asp-for="Age" class="form-control" readonly />
+</div>
+
+<div class="m-3">
+    <label asp-for="Email" class="col-form-label"></label>
+    <input type="text" asp-for="Email" class="form-control" readonly />
+</div>
+
+<div class="m-3">
+    <label asp-for="Address" class="col-form-label"></label>
+    <input type="text" asp-for="Address" class="form-control" readonly />
+</div>
+
+<div class="m-3">
+    <label asp-for="Phone" class="col-form-label"></label>
+    <input type="text" asp-for="Phone" class="form-control" readonly />
+</div>
+
+<div class="m-3">
+    <label asp-for="Salary" class="col-form-label"></label>
+    <input type="text" asp-for="Salary" class="form-control" readonly />
+</div>
+
+<div class="m-3">
+    <input asp-for="IsActive" class="form-check" disabled />
+    <label asp-for="IsActive" class="col-form-label"></label>
+</div>
+
+<div class="m-3">
+    <input asp-for="IsDeleted" class="form-check" disabled />
+    <label asp-for="IsDeleted" class="col-form-label"></label>
+</div>
+
+<div class="m-3">
+    <label asp-for="HiringDate" class="col-form-label">Data Of Creation</label>
+    <input type="datetime-local" asp-for="HiringDate" class="form-control" readonly />
+</div>
+
+<div class="m-3">
+    <label asp-for="CreateAt" class="col-form-label">Data Of Creation</label>
+    <input type="datetime-local" asp-for="CreateAt" class="form-control" readonly />
+</div>
