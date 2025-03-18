@@ -41,6 +41,7 @@ namespace Company.S03.BLL.Repositories
         //} 
         public EmployeeRepository(CompanyDbContext context) : base(context)
         {
+
         }
     }
 }

@@ -1,0 +1,63 @@
+﻿@model IEnumerable<Employee>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>
+    All Employee
+</h1>
+<br />
+<br />
+<a class="btn btn-primary" asp-action="Create">Create Employee</a>
+<br />
+<br />
+@if (Model.Count() > 0)
+{
+    <table class="table table-hover table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Email</th>
+                <th>Address</th>
+                <th>Phone</th>
+                <th>Salary</th>
+                <th>IsActive</th>
+                <th>IsDeleted</th>
+                <th>@Html.DisplayNameFor(E => E.HiringDate)</th>
+                <th>@Html.DisplayNameFor(E => E.CreateAt)</th>
+                <th>Details</th>
+                <th>Update</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Age</td>
+                    <td>@item.Email</td>
+                    <td>@item.Address</td>
+                    <td>@item.Phone</td>
+                    <td>@item.Salary</td>
+                    <td>@item.IsActive</td>
+                    <td>@item.IsDeleted</td>
+                    <td>@item.HiringDate.ToShortDateString()</td>
+                    <td>@item.CreateAt.ToShortDateString()</td>
+                    <td><a class="btn btn-warning" asp-action="Details" asp-route-id="@item.Id">Details</a></td>
+                    <td><a class="btn btn-success" asp-action="Edit" asp-route-id="@item.Id">Update</a></td>
+                    <td><a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="m-4 alert alert-success">
+        <h4>There are no Employee :)</h4>
+    </div>
+}
+
+
