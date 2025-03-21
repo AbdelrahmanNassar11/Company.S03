@@ -14,5 +14,6 @@ namespace Company.S03.BLL.Interface
         //int Add(Department department);
         //int Update(Department department);
         //int Delete(Department department);
+       
     }
 }

@@ -115,22 +115,42 @@ namespace Company.S03.PL.Controllers
             return Details(id,"Delete");
         }
 
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete([FromRoute] int id, Department department)
+        public IActionResult Delete([FromRoute] int id)
         {
-            if (ModelState.IsValid)
+            var department = _departmentRepository.Get(id);
+            if (department == null)
             {
-                if (id == department.Id)
-                {
-                    var count = _departmentRepository.Delete(department);
-                    if (count > 0)
-                    {
-                        return RedirectToAction(nameof(Index));//دا عشان يعمل تعديل ويغيره ف ال view و ال db
-                    }
-                }
+                return NotFound();
             }
+        
+            var count = _departmentRepository.Delete(department);
+            if (count > 0)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            
             return View(department);
         }
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public IActionResult Delete([FromRoute] int id, Department department)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        if (id == department.Id)
+        //        {
+        //            var count = _departmentRepository.Delete(department);
+        //            if (count > 0)
+        //            {
+        //                return RedirectToAction(nameof(Index));//دا عشان يعمل تعديل ويغيره ف ال view و ال db
+        //            }
+        //        }
+        //    }
+        //    return View(department);
+        //}
     }
 }
