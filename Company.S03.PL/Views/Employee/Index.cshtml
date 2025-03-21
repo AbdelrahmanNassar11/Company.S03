@@ -3,11 +3,29 @@
     ViewData["Title"] = "Index";
 }
 
+
 <h1>
     All Employee
 </h1>
 <br />
 <br />
+
+@* <div class="m-3 alert alert-danger">
+    <p>@ViewData["Message"]</p>
+</div> *@
+
+@* <div class="m-3 alert alert-danger">
+    <p>@ViewBag.Message</p>
+</div>
+ *@
+
+@* @if (string.IsNullOrEmpty(TempData["Message"] as string)) *@
+@if (TempData["Message"] != null)
+{
+    <div class="m-3 alert alert-info">
+        <p>@TempData["Message"]</p>
+    </div>
+}
 <a class="btn btn-primary" asp-action="Create">Create Employee</a>
 <br />
 <br />
@@ -26,6 +44,7 @@
                 <th>IsDeleted</th>
                 <th>@Html.DisplayNameFor(E => E.HiringDate)</th>
                 <th>@Html.DisplayNameFor(E => E.CreateAt)</th>
+                <th>Department</th>
                 <th>Details</th>
                 <th>Update</th>
                 <th>Delete</th>
@@ -45,6 +64,14 @@
                     <td>@item.IsDeleted</td>
                     <td>@item.HiringDate.ToShortDateString()</td>
                     <td>@item.CreateAt.ToShortDateString()</td>
+                    @if (item.Department != null)
+                    {
+                        <td>@item.Department.Name</td>
+                    }
+                    else
+                    {
+                        <td>Not Assigned</td>
+                    })
                     <Partial name="_ButtonPartialView" model="@item.Id" />
                 </tr>
             }

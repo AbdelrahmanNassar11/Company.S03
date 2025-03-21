@@ -9,21 +9,30 @@ namespace Company.S03.PL.Controllers
     public class EmployeeController : Controller
     {
         private readonly IEmployeeRepository _employeeRepository;
-        public EmployeeController(IEmployeeRepository employeeRepository)
+
+        public IDepartmentRepository _departmentRepository { get; }
+
+        public EmployeeController(IEmployeeRepository employeeRepository, IDepartmentRepository departmentRepository)
         {
             _employeeRepository = employeeRepository;
+            _departmentRepository = departmentRepository;
         }
         [HttpGet]
         public IActionResult Index()
         {
-
             var employees = _employeeRepository.GetAll();
+            //ViewData["Message"] = "Welcome to Employee Page";
+
+            //ViewBag.Message = "Welcome to Employee Page";
             return View(employees);
         }
 
         [HttpGet]
         public IActionResult Create()
         {
+            var departments = _departmentRepository.GetAll();
+            ViewBag.departments = departments;
+
             return View();
         }
 
@@ -33,25 +42,33 @@ namespace Company.S03.PL.Controllers
 
             if (ModelState.IsValid) //Server Side Validation
             {
-                var employee = new Employee
+                try
                 {
-                    Name = model.Name,
-                    Age = model.Age,
-                    Email = model.Email,
-                    Phone = model.Phone,
-                    Address = model.Address,
-                    Salary = model.Salary,
-                    IsActive = model.IsActive,
-                    IsDeleted = model.IsDeleted,
-                    HiringDate = model.HiringDate,
-                    CreateAt = model.CreateAt
-                };
+                    var employee = new Employee
+                    {
+                        Name = model.Name,
+                        Age = model.Age,
+                        Email = model.Email,
+                        Phone = model.Phone,
+                        Address = model.Address,
+                        Salary = model.Salary,
+                        IsActive = model.IsActive,
+                        IsDeleted = model.IsDeleted,
+                        HiringDate = model.HiringDate,
+                        CreateAt = model.CreateAt,
+                        DepartmentId = model.DepartmentId
+                    };
 
-                var count = _employeeRepository.Add(employee);
-
-                if (count > 0)
+                    var count = _employeeRepository.Add(employee);
+                    if (count > 0)
+                    {
+                        TempData["Message"] = "Employee Added Successfully";
+                        return RedirectToAction(nameof(Index));
+                    }
+                }
+                catch(Exception ex)
                 {
-                    return RedirectToAction(nameof(Index));
+                    ModelState.AddModelError("", ex.Message);
                 }
             }
 
@@ -73,6 +90,9 @@ namespace Company.S03.PL.Controllers
         [HttpGet]
         public IActionResult Edit(int? id)
         {
+            var departments = _departmentRepository.GetAll();
+            ViewBag.departments = departments;
+
             if (id is null) return BadRequest("Invalid Id");
 
             var employee = _employeeRepository.Get(id.Value);
@@ -89,14 +109,15 @@ namespace Company.S03.PL.Controllers
                 IsActive = employee.IsActive,
                 IsDeleted = employee.IsDeleted,
                 HiringDate = employee.HiringDate,
-                CreateAt = employee.CreateAt
+                CreateAt = employee.CreateAt,
+                DepartmentId = employee.DepartmentId
             };
             return View(employeeDto);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute] int id, CreateEmployeeDto model)
+        public IActionResult Edit([FromRoute] int id, Employee model)
         {
             if (ModelState.IsValid)
             {
@@ -112,7 +133,8 @@ namespace Company.S03.PL.Controllers
                     IsActive = model.IsActive,
                     IsDeleted = model.IsDeleted,
                     HiringDate = model.HiringDate,
-                    CreateAt = model.CreateAt
+                    CreateAt = model.CreateAt,
+                    DepartmentId = model.DepartmentId
                 };
                 var count = _employeeRepository.Update(employee);
                 if (count > 0)
@@ -132,20 +154,40 @@ namespace Company.S03.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete([FromRoute] int id, Employee employee)
+        public IActionResult Delete([FromRoute] int id)
         {
-            if (ModelState.IsValid)
+            var employee = _employeeRepository.Get(id);
+            if (employee == null)
             {
-                if (id == employee.Id)
-                {
-                    var count = _employeeRepository.Delete(employee);
-                    if (count > 0)
-                    {
-                        return RedirectToAction(nameof(Index));//دا عشان يعمل تعديل ويغيره ف ال view و ال db
-                    }
-                }
+                return NotFound();
             }
+
+            var count = _employeeRepository.Delete(employee);
+            if (count > 0)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
             return View(employee);
         }
+
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public IActionResult Delete([FromRoute] int id, Employee employee)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        if (id == employee.Id)
+        //        {
+        //            var count = _employeeRepository.Delete(employee);
+        //            if (count > 0)
+        //            {
+        //                return RedirectToAction(nameof(Index));//دا عشان يعمل تعديل ويغيره ف ال view و ال db
+        //            }
+        //        }
+        //    }
+        //    return View(employee);
+        //}
     }
 }

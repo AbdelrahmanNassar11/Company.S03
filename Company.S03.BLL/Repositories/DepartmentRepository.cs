@@ -42,5 +42,6 @@ namespace Company.S03.BLL.Repositories
         public DepartmentRepository(CompanyDbContext context) : base(context)
         {
         }
+
     }
 }

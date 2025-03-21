@@ -17,6 +17,7 @@ namespace Company.S03.PL.Dtos
 
         [RegularExpression(@"^\d+\-[A-Za-z]+\-[A-Za-z]+(\-[A-Za-z]+)?$", ErrorMessage = "Address Must Be Like 123-Street-City or 123-Street-City-Country")]
         public string Address { get; set; }
+
         [DataType(DataType.Currency)]
         public decimal Salary { get; set; }
         public bool IsActive { get; set; }
@@ -26,5 +27,7 @@ namespace Company.S03.PL.Dtos
 
         [DisplayName("CreateAt")]
         public DateTime CreateAt { get; set; }
+        [DisplayName("Department")]
+        public int? DepartmentId { get; set; }
     }
 }
