@@ -1,6 +1,8 @@
 using Company.S03.BLL.Interface;
 using Company.S03.BLL.Repositories;
 using Company.S03.DAL.Data.Contexts;
+using Company.S03.PL.Mapping;
+using Company.S03.PL.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace Company.S03.PL
@@ -16,10 +18,16 @@ namespace Company.S03.PL
             builder.Services.AddControllersWithViews();
             builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
             builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+           //builder.Services.AddAutoMapper(typeof(EmployeeProfile));
+           //builder.Services.AddAutoMapper(M => M.AddProfile(new EmployeeProfile()));
+            builder.Services.AddAutoMapper(typeof(Program).Assembly);
             builder.Services.AddDbContext<CompanyDbContext>(options => 
             { 
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
+            builder.Services.AddScoped<IScopedServices, ScopedServices>();//Par Request
+            builder.Services.AddTransient<ITransientServices, TransientServices>(); //Par Operation
+            builder.Services.AddSingleton<ISingletonServices, SingletonServices>();//Par App
             var app = builder.Build();
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
