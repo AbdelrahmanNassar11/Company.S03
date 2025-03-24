@@ -1,7 +1,9 @@
-﻿using Company.S03.BLL.Interface;
+﻿using AutoMapper;
+using Company.S03.BLL.Interface;
 using Company.S03.BLL.Repositories;
 using Company.S03.DAL.Models;
 using Company.S03.PL.Dtos;
+using Company.S03.PL.Mapping;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Company.S03.PL.Controllers
@@ -9,22 +11,33 @@ namespace Company.S03.PL.Controllers
     public class EmployeeController : Controller
     {
         private readonly IEmployeeRepository _employeeRepository;
+        private readonly IMapper _mapper;
 
         public IDepartmentRepository _departmentRepository { get; }
 
-        public EmployeeController(IEmployeeRepository employeeRepository, IDepartmentRepository departmentRepository)
+        public EmployeeController(IEmployeeRepository employeeRepository, IDepartmentRepository departmentRepository , IMapper mapper)
         {
             _employeeRepository = employeeRepository;
             _departmentRepository = departmentRepository;
+            _mapper = mapper;
         }
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Index(string? SearchInput)
         {
-            var employees = _employeeRepository.GetAll();
-            //ViewData["Message"] = "Welcome to Employee Page";
+            IEnumerable<Employee> employees;
+            if (string.IsNullOrEmpty(SearchInput))
+            {
+                 employees = _employeeRepository.GetAll();
+            }
+            else
+            {
+                 employees = _employeeRepository.GetByName(SearchInput);
+            }
 
-            //ViewBag.Message = "Welcome to Employee Page";
-            return View(employees);
+                //ViewData["Message"] = "Welcome to Employee Page";
+
+                //ViewBag.Message = "Welcome to Employee Page";
+                return View(employees);
         }
 
         [HttpGet]
@@ -44,20 +57,24 @@ namespace Company.S03.PL.Controllers
             {
                 try
                 {
-                    var employee = new Employee
-                    {
-                        Name = model.Name,
-                        Age = model.Age,
-                        Email = model.Email,
-                        Phone = model.Phone,
-                        Address = model.Address,
-                        Salary = model.Salary,
-                        IsActive = model.IsActive,
-                        IsDeleted = model.IsDeleted,
-                        HiringDate = model.HiringDate,
-                        CreateAt = model.CreateAt,
-                        DepartmentId = model.DepartmentId
-                    };
+                    ////Manual Mapping
+                    //var employee = new Employee
+                    //{
+                    //    Name = model.Name,
+                    //    Age = model.Age,
+                    //    Email = model.Email,
+                    //    Phone = model.Phone,
+                    //    Address = model.Address,
+                    //    Salary = model.Salary,
+                    //    IsActive = model.IsActive,
+                    //    IsDeleted = model.IsDeleted,
+                    //    HiringDate = model.HiringDate,
+                    //    CreateAt = model.CreateAt,
+                    //    DepartmentId = model.DepartmentId
+                    //};
+
+                    //AutoMapper
+                    var employee = _mapper.Map<Employee>(model);
 
                     var count = _employeeRepository.Add(employee);
                     if (count > 0)
