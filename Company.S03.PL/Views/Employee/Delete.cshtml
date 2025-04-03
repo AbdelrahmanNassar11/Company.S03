@@ -9,7 +9,7 @@
 <form asp-action="Delete">
 
     <partial name="EmployeePartialView/_DeleteDatialsPartialView" />
-
+    <input asp-for="ImageName" hidden/>
     <div class="m-3">
         <button type="submit" class="btn btn-danger">Delete</button>
         <a asp-action="Index" class="btn btn-light">Back To List</a>

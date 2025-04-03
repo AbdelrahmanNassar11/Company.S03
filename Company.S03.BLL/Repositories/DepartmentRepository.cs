@@ -1,6 +1,7 @@
 ﻿using Company.S03.BLL.Interface;
 using Company.S03.DAL.Data.Contexts;
 using Company.S03.DAL.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,8 @@ namespace Company.S03.BLL.Repositories
 {
     public class DepartmentRepository : GenericRepository<Department>, IDepartmentRepository
     {
+        private DbContext? dbContext;
+
         //private readonly CompanyDbContext _context;
         //public DepartmentRepository(CompanyDbContext companyDbContext)
         //{
@@ -43,5 +46,9 @@ namespace Company.S03.BLL.Repositories
         {
         }
 
+        //public DepartmentRepository(DbContext? dbContext)
+        //{
+        //    this.dbContext = dbContext;
+        //}
     }
 }

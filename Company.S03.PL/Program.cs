@@ -16,11 +16,15 @@ namespace Company.S03.PL
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
-            builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            //builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+            //builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
            //builder.Services.AddAutoMapper(typeof(EmployeeProfile));
            //builder.Services.AddAutoMapper(M => M.AddProfile(new EmployeeProfile()));
+
             builder.Services.AddAutoMapper(typeof(Program).Assembly);
+
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
             builder.Services.AddDbContext<CompanyDbContext>(options => 
             { 
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));

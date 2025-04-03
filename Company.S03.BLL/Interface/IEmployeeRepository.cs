@@ -15,6 +15,6 @@ namespace Company.S03.BLL.Interface
         //int Update(Employee employee);
         //int Delete(Employee employee);
 
-        List<Employee> GetByName(string name);
+        Task<List<Employee>> GetByNameAsync(string name);
     }
 }

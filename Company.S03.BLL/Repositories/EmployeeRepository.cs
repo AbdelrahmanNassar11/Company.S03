@@ -13,6 +13,8 @@ namespace Company.S03.BLL.Repositories
     public class EmployeeRepository : GenericRepository<Employee>, IEmployeeRepository
     {
         private readonly CompanyDbContext _context;
+        private DbContext? dbContext;
+
         //public EmployeeRepository(CompanyDbContext companyDbContext)
         //{
         //    _context = companyDbContext;
@@ -42,11 +44,16 @@ namespace Company.S03.BLL.Repositories
         //} 
         public EmployeeRepository(CompanyDbContext context) : base(context) => _context = context;
 
+        //public EmployeeRepository(DbContext? dbContext)
+        //{
+        //    this.dbContext = dbContext;
+        //}
+
         public CompanyDbContext Context { get; }
 
-        public List<Employee> GetByName(string name)
+        public async Task<List<Employee>> GetByNameAsync(string name)
         {
-            return _context.Employees.Include(E => E.Department).Where(E => E.Name.ToLower() == name.ToLower()).ToList();
+            return await _context.Employees.Include(E => E.Department).Where(E => E.Name.ToLower() == name.ToLower()).ToListAsync();
         }
     }
 }
