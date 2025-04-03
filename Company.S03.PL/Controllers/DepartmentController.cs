@@ -1,24 +1,28 @@
-﻿using Company.S03.BLL.Interface;
+﻿using AutoMapper;
+using Company.S03.BLL.Interface;
 using Company.S03.BLL.Repositories;
 using Company.S03.DAL.Models;
 using Company.S03.PL.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.DotNet.Scaffolding.Shared.Messaging;
+using System.Threading.Tasks;
 
 namespace Company.S03.PL.Controllers
 {
     public class DepartmentController : Controller
     {
-        private readonly IDepartmentRepository _departmentRepository;
-        public DepartmentController(IDepartmentRepository departmentRepository )
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
+        public DepartmentController(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _departmentRepository = departmentRepository;
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
          
-            var departments = _departmentRepository.GetAll();
+            var departments = await _unitOfWork.DepartmentRepository.GetAllAsync();
             return View(departments);
         }
 
@@ -29,21 +33,16 @@ namespace Company.S03.PL.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(CreateDepartmentDto model)
+        public async Task<IActionResult> Create(CreateDepartmentDto model)
         {
 
             if(ModelState.IsValid) //Server Side Validation
             {
-                var department = new Department
-                {
-                    Code = model.Code,
-                    Name = model.Name,
-                    CreateAt = model.CreateAt
-                };
+                var department = _mapper.Map<Department>(model);
 
-                var count = _departmentRepository.Add(department);
-
-                if(count > 0)
+                await _unitOfWork.DepartmentRepository.AddAsync(department);
+                var count = await _unitOfWork.CompleteAsync();
+                if (count > 0)
                 {
                     return RedirectToAction(nameof(Index));
                 }           
@@ -53,22 +52,22 @@ namespace Company.S03.PL.Controllers
         }
 
         [HttpGet]
-        public IActionResult Details(int? id , string viewName = "Details")
+        public async Task<IActionResult> Details(int? id , string viewName = "Details")
         {
             if (id is null) return BadRequest("Invalid Id");
 
-            var department = _departmentRepository.Get(id.Value);
+            var department = await _unitOfWork.DepartmentRepository.GetAsync(id.Value);
 
             if (department is null) return NotFound(new { StatusCode = 404, Message = $"Department with Id {id} is Not Found" });
              
             return View(viewName,department);
         }
         [HttpGet]
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id is null) return BadRequest("Invalid Id");
 
-            var department = _departmentRepository.Get(id.Value);
+            var department = await _unitOfWork.DepartmentRepository.GetAsync(id.Value);
 
             if (department is null) return NotFound(new { StatusCode = 404, Message = $"Department with Id {id} is Not Found" });
             var departmentDto = new CreateDepartmentDto
@@ -82,19 +81,14 @@ namespace Company.S03.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute] int id,CreateDepartmentDto model)
+        public async Task<IActionResult> Edit([FromRoute] int id,CreateDepartmentDto model)
         {
             if (ModelState.IsValid)
             {
-                Department department = new Department
-                {
-                    Id = id,
-                    Code = model.Code,
-                    Name = model.Name,
-                    CreateAt = model.CreateAt
-                };
+                var department = _mapper.Map<Department>(model);
 
-                var count = _departmentRepository.Update(department);
+                _unitOfWork.DepartmentRepository.Update(department);
+                var count = await _unitOfWork.CompleteAsync();
                 if (count > 0)
                 {
                     return RedirectToAction(nameof(Index));//دا عشان يعمل تعديل و يغيرهفال view و ال db
@@ -104,29 +98,24 @@ namespace Company.S03.PL.Controllers
         }
 
         [HttpGet]
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
-            //if (id is null) return BadRequest("Invalid Id");
-
-            //var department = _departmentRepository.Get(id.Value);
-
-            //if (department is null) return NotFound(new { StatusCode = 404, Message = $"Department with Id {id} is Not Found" });
-
-            return Details(id,"Delete");
+            return await Details(id,"Delete");
         }
 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete([FromRoute] int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var department = _departmentRepository.Get(id);
+            var department = await _unitOfWork.DepartmentRepository.GetAsync(id);
             if (department == null)
             {
                 return NotFound();
             }
         
-            var count = _departmentRepository.Delete(department);
+            _unitOfWork.DepartmentRepository.Delete(department);
+            var count = await _unitOfWork.CompleteAsync();
             if (count > 0)
             {
                 return RedirectToAction(nameof(Index));
@@ -134,23 +123,5 @@ namespace Company.S03.PL.Controllers
             
             return View(department);
         }
-
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public IActionResult Delete([FromRoute] int id, Department department)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        if (id == department.Id)
-        //        {
-        //            var count = _departmentRepository.Delete(department);
-        //            if (count > 0)
-        //            {
-        //                return RedirectToAction(nameof(Index));//دا عشان يعمل تعديل ويغيره ف ال view و ال db
-        //            }
-        //        }
-        //    }
-        //    return View(department);
-        //}
     }
 }
