@@ -1,8 +1,10 @@
 using Company.S03.BLL.Interface;
 using Company.S03.BLL.Repositories;
 using Company.S03.DAL.Data.Contexts;
+using Company.S03.DAL.Models;
 using Company.S03.PL.Mapping;
 using Company.S03.PL.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Company.S03.PL
@@ -25,6 +27,8 @@ namespace Company.S03.PL
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+            builder.Services.AddIdentity<AppUser, IdentityRole>()
+                            .AddEntityFrameworkStores<CompanyDbContext>();
             builder.Services.AddDbContext<CompanyDbContext>(options => 
             { 
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -32,6 +36,12 @@ namespace Company.S03.PL
             builder.Services.AddScoped<IScopedServices, ScopedServices>();//Par Request
             builder.Services.AddTransient<ITransientServices, TransientServices>(); //Par Operation
             builder.Services.AddSingleton<ISingletonServices, SingletonServices>();//Par App
+
+            builder.Services.ConfigureApplicationCookie(config =>
+            {
+                config.LoginPath = "/Account/SignIn";
+                config.LogoutPath = "/Account/SignOut";
+            });
             var app = builder.Build();
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -45,6 +55,9 @@ namespace Company.S03.PL
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",
