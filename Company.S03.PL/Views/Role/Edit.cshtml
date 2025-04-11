@@ -1,0 +1,19 @@
+﻿@model RolesToReturnDto
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit Employee</h1>
+<br />
+<br />
+<form asp-action="Edit" enctype="multipart/form-data">
+
+    <partial name="RolesPartialView/_CreateEditPartialView" model ="@Model" />
+
+    <div class="m-3">
+        <a asp-action="AddOrRemoveUser" asp-route-roleId="@Model.Id" class="btn btn-success" a>Add or Remove User</a>
+        <a asp-action="Index" asp-controller="User" class="btn btn-success">Save</a>
+        <a asp-action="Index" class="btn btn-light">Back To List</a>
+    </div>
+</form>
+

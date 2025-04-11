@@ -31,7 +31,7 @@ All Department
                     <td>@item.Code</td>
                     <td>@item.Name</td>
                     <td>@item.CreateAt.ToShortDateString()</td>
-                    <Partial name="_ButtonPartialView" model="@item.Id" />
+                    <Partial name="_ButtonPartialView" model="@item.Id.ToString()" />
                 </tr>
             }
         </tbody>

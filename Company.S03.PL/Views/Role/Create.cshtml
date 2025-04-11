@@ -1,0 +1,20 @@
+﻿@model RolesToReturnDto
+@{
+    ViewData["Title"] = "Create";
+}
+<h1>Create Employee</h1>
+<br />
+<br />
+<br />
+<form asp-action="Create" enctype="multipart/form-data">
+    
+    <partial name="RolesPartialView/_CreateEditPartialView" />
+
+    <div class="m-3">
+        <button type="submit" class="btn btn-primary">Create</button>
+        <a asp-action="Index" class="btn btn-light">Back To List</a>
+    </div>
+
+</form>
+
+

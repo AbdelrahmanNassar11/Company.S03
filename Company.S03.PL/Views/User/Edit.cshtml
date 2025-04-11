@@ -1,0 +1,18 @@
+﻿@model UserToReturnDto
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit Employee</h1>
+<br />
+<br />
+<form asp-action="Edit" enctype="multipart/form-data">
+
+    <partial name="UserPartialView/_CreateEditPartialView" />
+   
+    <div class="m-3">
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a asp-action="Index" class="btn btn-light">Back To List</a>
+    </div>
+</form>
+
